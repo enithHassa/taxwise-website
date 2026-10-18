@@ -34,7 +34,24 @@ if ("IntersectionObserver" in window && sections.length && navAnchors.length) {
   sections.forEach((section) => observer.observe(section));
 }
 
-// This demo form validates locally and previews the message; it does not send email.
+const moduleTabs = document.querySelectorAll(".module-tab");
+const modulePanels = document.querySelectorAll(".module-panel");
+if (moduleTabs.length && modulePanels.length) {
+  moduleTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.getAttribute("data-module");
+      moduleTabs.forEach((t) => {
+        const active = t === tab;
+        t.classList.toggle("active", active);
+        t.setAttribute("aria-selected", String(active));
+      });
+      modulePanels.forEach((panel) => {
+        panel.classList.toggle("active", panel.id === `panel-${id}`);
+      });
+    });
+  });
+}
+
 const contactForm = document.querySelector("#contact-form");
 const formFeedback = document.querySelector("#form-feedback");
 if (contactForm && formFeedback) {
@@ -43,7 +60,6 @@ if (contactForm && formFeedback) {
     if (!contactForm.reportValidity()) return;
     const formData = new FormData(contactForm);
     const name = String(formData.get("name") || "").trim();
-    const subject = String(formData.get("subject") || "General enquiry");
     formFeedback.textContent = `Thanks, ${name}. Your message details are ready to review, but this demo form does not send email yet. Connect a form service before publishing contact functionality.`;
   });
 }
